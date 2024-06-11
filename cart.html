@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="header"></div>
+    <div class="m-5 overflow-hidden">
+        <div class="m-5 px-5">
+            <div class="cart-left">
+                <div class="cart-header mt-5 p-1 px-1" style="background-color: #f2f2f2; border: 1px solid #eaeaea;">
+                    <div class="row align-items-center mx-2">
+                        <div class="col-md-2 fw-semibold fs-14px">PRODUCT</div>
+                        <div class="col-md-2 fw-semibold fs-14px">NAME</div>
+                        <div class="col-md-2 fw-semibold fs-14px">PRICE</div>
+                        <div class="col-md-2 fw-semibold fs-14px">QTY</div>
+                        <div class="col-md-2 fw-semibold fs-14px">TOTAL</div>
+                        <div class="col-md-1 clear"><img src="delete.png" alt="" class="w-75" onclick="clearcart()"
+                            id="clearcart"></div>
+                        </div>
+                    </div>
+                    <div id="cart_body"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="header.js"></script>
+<script>
+
+    function cartdisplay() {
+        document.getElementById('clearcart').style.display = 'block';
+
+        var cartdisp = document.querySelector('#cart_body');
+        cartdisp.innerHTML = '';
+
+        var show = JSON.parse(localStorage.getItem('cart'))
+        console.log(show)
+
+        var i = 0;
+        show.forEach(element => {
+            i++;
+
+            cartdisp.innerHTML += `<div class="cart-body d-flex flex-wrap align-items-center py-5" >
+        
+        <div class="col-md-2 product-img">
+        <img src="${element.img}" alt="" style="max-width: 100px;">
+        </div>
+        <div class="product-detail col-md-2">
+        <span class="fs-14px d-block fw-semibold opacity-75">
+        ${element.name}
+        </span>
+            <span class="fs-14px fw-semibold opacity-75">COLOR: ${element.color}</span>
+            </div>
+        <div class="price col-md-2">
+        <span class="fw-semibold fs-14px px-5">${element.price}</span>
+        </div>
+        <div class="col-md-2">
+        <button class="px-3" id="addqty" onclick="addqty(${element.qty},${element.id})"">+</button>
+        <input type="text" id="qty" class="m-0" disabled class="bg-transparent" value="${element.qty}">
+        <button class="px-3" id="remqty" onclick="remqty(${element.qty},${element.id})">-</button>
+        </div>
+        <div class="total col-md-2">
+        <span class="fw-bold fs-14px ps-5">${element.price * element.qty}</span>
+        </div>
+        <div class="remove ms-2">
+            <img src="remove.png" alt="bin" class="w-25 ms-5" onclick="remove(${element.id})">
+            </div>
+            </div>`
+        });
+        
+    }
+    cartdisplay()
+
+    function remove(id) {
+        let data = JSON.parse(localStorage.getItem('cart'))
+        const removeIndex = data.findIndex(item => item.id == id)
+
+        data.splice(removeIndex, 1);
+        localStorage.setItem('cart', JSON.stringify(data))
+        console.log(id)
+        cartdisplay();
+    }
+
+    function clearcart() {
+        localStorage.clear();
+        cartdisplay();
+    }
+
+    let counts = JSON.parse(localStorage.getItem('count'));
+    var countsadd = document.querySelector('#count').innerHTML = counts;
+
+    function addqty(qty, id) {
+        var adddqty = document.getElementById('qty');
+        adddqty.value = qty++;
+
+        var upadteqty = JSON.parse(localStorage.getItem('cart'))
+        upadteqty[id].qty = qty;
+
+        localStorage.setItem('cart', JSON.stringify(upadteqty))
+
+        cartdisplay();
+    }
+
+    function remqty(qty, id) {
+        
+        if (qty != 1) {
+            var adddqty = document.getElementById('qty');
+            adddqty.value = qty--;
+            
+            var upadteqty = JSON.parse(localStorage.getItem('cart'))
+            upadteqty[id].qty = qty;
+
+            localStorage.setItem('cart', JSON.stringify(upadteqty))
+            
+            var counter = JSON.parse(localStorage.getItem('count'));
+            counter--;
+            localStorage.setItem('count',JSON.stringify('counter'))
+        cartdisplay();
+        }
+    }
+
+</script>
+
+</html>

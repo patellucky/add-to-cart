@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="card-area" class="row p-5 m-5"></div>
+</body>
+<script src="header.js"></script>
+
+<script>
+    const data = [
+        { name: 'Noise Colorfit pro 2', price: '1799', color: 'orange', img: 'p-1.webp' },
+        { name: 'Noise Colorfit pro 3', price: '1999', color: 'black', img: 'p-2.webp' },
+        { name: 'Noise 2 pro', price: '2999', color: 'black', img: 'p-3.webp' },
+        { name: 'Noise 3 pro', price: '4999', color: 'light black', img: 'p-4.webp' },
+        { name: 'Noise round', price: '3999', color: 'dark black', img: 'p-5.webp' },
+        { name: 'Noise light', price: '3299', color: 'pink', img: 'p-6.webp' },
+        { name: 'Noise tech', price: '5299', color: 'black', img: 'p-7.webp' },
+        { name: 'Noise smart', price: '3499', color: 'black', img: 'p-8.webp' },
+        { name: 'Noise smart pro', price: '3499', color: 'orange', img: 'extra-1.webp' }
+    ]
+
+    for (let i = 0; i < data.length; i++) {
+        document.querySelector('#card-area').innerHTML += `<div class="col-md-6 col-xl-4">
+    <div class="card mt-5 p-2 rounded-3 position-relative border-3">
+        <img src="${data[i].img}" alt="" class="img-fluid border p-3 border-3 rounded-2" id="img">
+        <div class="card-body">
+            <div class="card-title" id="addtocart">
+                <button
+                    class="px-3 py-1 text-white fw-semibold rounded-3 text-center nav-link mb-1 add" id="addcart" onclick="add_cart(${i})">ADD
+                    TO CART</button>
+                <button
+                    class="px-3 py-1 text-white fw-semibold rounded-3 text-center nav-link mb-1 view">View</button>
+                    <div id="name">
+                <span class="fs-5 fw-semibold opacity-75 text-center d-block id="name">${data[i].name}
+                    </span>
+                    </div>
+                    <div id="color">
+                <span class="fw-medium opacity-50 d-block text-center">${data[i].color}</span>
+                </div>
+                <div id="price">
+                <span class="d-block text-center mt-3 fw-bold">${data[i].price}</span>
+                </div>
+                <div class="d-block text-center mt-1 fw-bold">
+                <span>
+                &nbsp&nbsp<del>5,999</del><span class="d-block text-success">&nbsp65% off
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>`
+    }
+
+    var addcart = document.querySelectorAll('#addcart');
+    var count;
+    localStorage.setItem('count', JSON.stringify(count))
+    document.getElementById('count').innerHTML = count;
+
+    function add_cart(id) {
+        var parent = addcart[id].parentElement;
+        console.log(parent)
+        var img = parent.parentElement.parentElement.querySelector('#img').src;
+        var names = parent.parentElement.querySelector('#name').innerText;
+        var color = parent.parentElement.querySelector('#color').innerText;
+        var price = parseInt(parent.parentElement.querySelector('#price').innerText);
+
+        var cart = JSON.parse(localStorage.getItem('cart'));
+
+        if (cart == null) {
+            cart = [];
+        }
+
+        let local = {
+            id: id,
+            name: names,
+            img: img,
+            color: color,
+            price: price,
+            qty: 1
+        }
+
+        let index = cart.findIndex(items => items.id == id);
+
+
+        if (index != -1) {
+            cart[index].qty++;
+        } else {
+            cart.push(local);
+            count++;
+            localStorage.setItem('count', JSON.stringify(count))
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart))
+
+        let counts = JSON.parse(localStorage.getItem('count'));
+        document.getElementById('count').innerHTML = counts;
+
+    }
+
+
+</script>
+
+</html>
